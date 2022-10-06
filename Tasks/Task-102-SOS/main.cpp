@@ -11,7 +11,6 @@ Buttons buttons;
 //
 // Press the black reset button to restart the code (and stop the sound)
 // Otherwise, the noise can be "distracting" :)
-
 int main()
 {
     //Wait for the BLUE button to be pressed (otherwise this becomes super annoying!)
@@ -20,11 +19,13 @@ int main()
     //Repeat everything "forever" (until the power is removed or the chip is reset)
     while (true)
     {
+
+        
         //On for 500ms
         greenLED = 1;
         buzz.playTone("C");
         wait_us(WAIT_TIME_MS * 2);
-
+        
         greenLED = 1;
         buzz.playTone("C");
         wait_us(WAIT_TIME_MS *1);
