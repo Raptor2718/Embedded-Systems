@@ -2,7 +2,7 @@
 #include "uop_msb.h"
 using namespace uop_msb;
 
-#define WAIT_TIME_MS 500 
+#define WAIT_TIME_MS 500000 
 DigitalOut greenLED(TRAF_GRN1_PIN);
 Buzzer buzz;
 Buttons buttons;
@@ -23,14 +23,30 @@ int main()
         //On for 500ms
         greenLED = 1;
         buzz.playTone("C");
-        wait_us(WAIT_TIME_MS * 1000);  //500ms
+        wait_us(WAIT_TIME_MS * 2);
+
+        greenLED = 1;
+        buzz.playTone("C");
+        wait_us(WAIT_TIME_MS *1);
+
+        greenLED = 1;
+        buzz.playTone("D");
+        wait_us(WAIT_TIME_MS *2);
+
+        greenLED = 1;
+        buzz.playTone("C");
+        wait_us(WAIT_TIME_MS *2);
+
+        greenLED = 1;
+        buzz.playTone("F");
+        wait_us(WAIT_TIME_MS *2);
+
+        greenLED = 1;
+        buzz.playTone("E");
+        wait_us(WAIT_TIME_MS *1);
 
 
-        //Off for 500ms
-        greenLED = 0;
-        buzz.playTone("C", Buzzer::HIGHER_OCTAVE);
-        wait_us(WAIT_TIME_MS * 1000);  //500ms
-
+        
         //Pause
         buzz.rest();
         wait_us(WAIT_TIME_MS * 1000);
