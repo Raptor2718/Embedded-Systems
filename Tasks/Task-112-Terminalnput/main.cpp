@@ -23,9 +23,9 @@ int main()
     printf("You entered character %c which has the ASCII code %d\n", c2, c2);
 
     //scanf
-    printf("\n\nTo set the delay (in ms), type in an integer number and press return\n");
-    int delay_ms;
-    int parsed = scanf("%d", &delay_ms);
+    printf("\n\nTo set the delay (in ms), type in an int number and press return\n");
+    int delay_ms=65;
+    int parsed = scanf("%d", daselay_ms);
     
     printf("You entered %d correct integer values. The value was %dms\n", parsed, delay_ms);
 
@@ -40,6 +40,7 @@ int main()
         led2 = 0;
         led3 = 0;        
     } 
+//as long as you enter a valid int fscan will make parsed 1 and so the below code will never run. smart
 
     printf("Invalid - please restart and try again\n");
     while(1);    
