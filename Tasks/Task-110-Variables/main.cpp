@@ -39,8 +39,8 @@ int main()
     // Short
     short shortCount = 32766;
     printf("The value of shortCount is %hd\n", shortCount);
-    shortCount = shortCount + 1;
-    printf("add 1 and shortCount is %hd\n", shortCount);
+    shortCount = shortCount + 2;
+    printf("add 2. It ran out and shortCount is %hd\n", shortCount);
 
     // Long long
     long long NN = 0x12345678ABCD0001LL; //Literal in HEX
@@ -48,18 +48,18 @@ int main()
     printf("A very large number in hex %llX\n", NN);
 
     // unsigned
-    unsigned short p = 1; //16 bit
-    printf("unsigned int p = %u\n", p);
-    p = p - 2;
-    printf("Subtract 2. Now unsigned int p = %u\n", p);
+    unsigned short p = 65535; //16 bit. so max is 65535
+    printf("unsigned short p = %u\n", p);
+    p = p + 1;
+    printf("Add 1. Now unsigned short p = %u\n", p);
 
     // float 
     float pi_float = 3.1415926536;
-    printf("The value of pi is approximately %f\n", pi_float);
+    printf("The value of pi is approximately %11.9f\n", pi_float); //with field length 11 and a precision of 9
 
     // double
     double pi_double = 3.1415926536l;
-    printf("The value of pi is approximately %lf\n", pi_double);
+    printf("The value of pi is approximately %11.9lf\n", pi_double);
 
     // Data type sizes (in bytes)
     printf("Size of a char is %d bytes\n", sizeof(char));
