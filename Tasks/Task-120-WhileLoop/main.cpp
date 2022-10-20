@@ -7,7 +7,7 @@ DigitalOut greenLED(PC_6,0);
 
 int main()
 {
-    int grade=-1, hits=0;
+    int grade=-1, hits=0; //this is to allow the code to run at least once.
 
     printf("\n\nPress Return to Start\n\n");
 

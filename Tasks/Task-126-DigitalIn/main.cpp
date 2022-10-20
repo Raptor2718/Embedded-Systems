@@ -14,8 +14,8 @@ int main()
     
         // Wait for the button to be pressed
         do {
-            btnA = ButtonA; //Read button A
-        } while (btnA == 0);
+            //btnA = ButtonA; //Read button A
+        } while (!ButtonA);
 
 
         //Toggle the red LED
@@ -26,10 +26,12 @@ int main()
 
         // Wait for the button to be released
         do {
-            btnA = ButtonA; //Read button A
-        } while (btnA == 1);
+            //btnA = ButtonA; //Read button A
+        } while (ButtonA);
 
         //Wait for noise to settle
+        redLED = !redLED;
+        
         wait_us(10000);
     }
 }
