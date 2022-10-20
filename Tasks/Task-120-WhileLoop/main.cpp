@@ -11,7 +11,7 @@ int main()
 
     printf("\n\nPress Return to Start\n\n");
 
-    while (hits < 1) {
+    while ((hits < 1) || (grade > 100) || (grade < 0)) { //this prevents you from entering an invalid grade
         //Clear out the serial port (keyboard)
         flushInputBuffer();
         //Prompt user
