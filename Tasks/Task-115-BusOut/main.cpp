@@ -6,24 +6,22 @@
 // DigitalOut yellowLED(PC_3,1);
 // DigitalOut greenLED(PC_6,1);
 
-BusOut lights(PC_2, PC_3, PC_6);
+BusOut lights(PC_2, PC_3, PC_6, PC_7, PC_8, PC_9);
 //BusOut lights(PC_2, PC_3, PC_6, PB_0, PB_7, PB_14);
 
 int main()
 {
+    pin_mode(PC_7, OpenDrainNoPull);
     //All OFF
-    lights = 0b000;
+    lights = 0;
 
     while (true)
     {
-        int count = 0;
-        while (count <= 7) 
+        for (int i = 0; i < 64; i++)
         {
-            printf("count = %d\n", count);
-            lights = count;
+            lights = i;
             wait_us(1000000);
-
-            count = count + 1;
         }
+        
     }
 }
