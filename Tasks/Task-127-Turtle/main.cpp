@@ -35,6 +35,10 @@ int main()
         } else if (buttons == 2)
         {
             c = (c-1) % 16;
+            if ( c < 0)
+            {
+                c += 16;
+            }
         } else if (buttons == 4)
         {
             r = (r-1) % 2;
@@ -42,6 +46,7 @@ int main()
         {
             c = (c+1) % 16;
         };
+
 
         lcd.cls();
         lcd.locate(r, c);
