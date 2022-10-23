@@ -18,7 +18,7 @@ int main()
 
         while(buttons == 15);
         wait_us(10000);
-        red = !red; 
+        //red = !red; 
     
     }
 }
