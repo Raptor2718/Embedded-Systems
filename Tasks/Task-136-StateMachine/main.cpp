@@ -74,26 +74,26 @@ int main()
             break;
 
             case DEBOUNCE_1:
-                if (timeA >= 250) {
-                    stateA = WAITING_FOR_RELEASE;
-                    tmrA.stop();
-                }
-            break;
-
-            case WAITING_FOR_RELEASE:
-                if (btnA == 0) {
-                    stateA = DEBOUNCE_2;
-                    tmrA.reset();
-                    tmrA.start();
-                }
-            break;
-
-            case DEBOUNCE_2:
-                if (timeA >= 250) {
+                if (timeA >= 50) {
                     stateA = WAITING_FOR_PRESS;
                     tmrA.stop();
                 }
-            break;            
+            break;
+
+            // case WAITING_FOR_RELEASE:            //commenting made the disp increment while button A is being presses
+            //     if (btnA == 0) {
+            //         stateA = DEBOUNCE_2;
+            //         tmrA.reset();
+            //         tmrA.start();
+            //     }
+            // break;
+
+            // case DEBOUNCE_2:
+            //     if (timeA >= 50) {
+            //         stateA = WAITING_FOR_PRESS;
+            //         tmrA.stop();
+            //     }
+            // break;            
         }
 
         // ***************************
@@ -113,7 +113,7 @@ int main()
             break;
 
             case DEBOUNCE_1:
-                if (timeB >= 250) {
+                if (timeB >= 50) {
                     stateB = WAITING_FOR_RELEASE;
                     tmrB.stop();
                 }
@@ -128,7 +128,7 @@ int main()
             break;
 
             case DEBOUNCE_2:
-                if (timeB >= 250) {
+                if (timeB >= 50) {
                     stateB = WAITING_FOR_PRESS;
                     tmrB.stop();
                 }
