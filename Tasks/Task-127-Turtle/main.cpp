@@ -27,7 +27,6 @@ int main()
     while (true) {
 
         while(buttons == 0);
-        wait_us(10000);
 
         if (buttons == 1)
         {
@@ -52,8 +51,8 @@ int main()
         lcd.locate(r, c);
         lcd.printf("0");
 
-        while (buttons != 0);
-        wait_us(10000);
+        wait_us(100000);
+
 
     }
 }

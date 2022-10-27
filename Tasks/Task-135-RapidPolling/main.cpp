@@ -51,6 +51,7 @@ int main()
         // Did button A change?
         if (btnA_curr != btnA_prev) {
 
+            redLED = !redLED;
             //Was it a press?
             if (btnA_curr == 1) {
                 //Button A was pressed!
@@ -69,6 +70,7 @@ int main()
         // Did button B change?
         if (btnB_curr != btnB_prev) {
 
+            yellowLED = !yellowLED;
             //Was it a press?
             if (btnB_curr == 1) {
                 //Button B was pressed!
@@ -85,7 +87,7 @@ int main()
         }
         
         // Slow it down a bit (and debounce the switches)
-        wait_us(250000);  
+        wait_us(20000);  
     }
 }
 
