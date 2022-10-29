@@ -20,8 +20,9 @@ string cacti = "                ";
 int jump = 0;
 int obstacle; 
 
+int up = 0;
+
 InterruptIn btnA(BTN1_PIN);
-InterruptIn btnB(BTN2_PIN);
 Ticker tick;
 
 DigitalOut greenLED(PC_6);
@@ -51,45 +52,70 @@ int main()
 
         if (jump == 1)
         {
-            lcd.locate(1, 1);
-            lcd.printf(" ");
+            // lcd.locate(1, 1);
+            // lcd.printf(" ");
             lcd.locate(0, 1);
             lcd.printf("T");
+            up = 1;
 
         //wait for 2 seconds in air
             while(times == (times+4));  
 
-            lcd.locate(1, 1);
-            lcd.printf("T");
+            up = 0;
+
+            // lcd.locate(1, 1);
+            // lcd.printf("T");
             lcd.locate(0, 1);
             lcd.printf(" ");
 
         } else if (jump == 2) {
+
             greenLED = !greenLED;
             //increments counter
             times++;
 
-            obstacle = (rand() * 12) % 4;
+            obstacle = rand() % 6;
 
     //scroll cacti to the left
             for (int i = 0; i < 15; i++)
             {
-                cacti[i] = cacti[i + 1];
+                cacti[i] = cacti[i+1];
+                lcd.locate(1, i);
+
+                if (i == 1)
+                {
+                    if (up == 0)
+                    {
+                        lcd.printf("T");
+
+                        if (cacti[1] == 'c')
+                        {
+                            lcd.cls();
+                            lcd.locate(0, 3);
+                            lcd.printf("game over!");
+                            lcd.locate(1, 8);
+                            lcd.printf(":c");
+
+                            while(true);
+                        } 
+
+                        continue;
+                    }
+                    
+                }
+                lcd.printf("%c", cacti[i]);
             }
 
-            cacti[15] = ' ';
-
-
-            if (obstacle == 0 )
+            if (obstacle == 0)
             {
                 cacti[15] = 'c';
+            } else {
+                cacti[15] = ' ';
             }
 
-            for (int i = 0; i < 16; i++)
-            {
-                lcd.locate(1, i);
-                lcd.printf("%c",cacti[i]);
-            }
+            lcd.locate(1, 15);
+            lcd.printf("%c", cacti[15]);
+
         }
 
         jump = 0;

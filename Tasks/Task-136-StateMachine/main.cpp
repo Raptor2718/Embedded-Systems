@@ -63,10 +63,12 @@ int main()
 
         switch (stateA) {
             case WAITING_FOR_PRESS:
-                if (btnA == 1) {
-                    stateA = DEBOUNCE_1;
+                if (btnA == 1) {          //if pressed
+                    stateA = DEBOUNCE_1; //switches the state of enum
+
                     tmrA.reset();
-                    tmrA.start();
+                    tmrA.start();       //start a timer to avoid debounce
+
                     if (count < 99) {
                         disp = ++count;
                     }
@@ -74,26 +76,26 @@ int main()
             break;
 
             case DEBOUNCE_1:
-                if (timeA >= 50) {
-                    stateA = WAITING_FOR_PRESS;
+                if (tmrA.read_ms() >= 50) {        //swaping timeA (from original) with tmrA didnt change anything. what is timeA it for? explainatory?
+                    stateA = WAITING_FOR_RELEASE;  //change to wait press -> disp continuously increse when pressed.
                     tmrA.stop();
                 }
             break;
 
-            // case WAITING_FOR_RELEASE:            //commenting made the disp increment while button A is being presses
-            //     if (btnA == 0) {
-            //         stateA = DEBOUNCE_2;
-            //         tmrA.reset();
-            //         tmrA.start();
-            //     }
-            // break;
+            case WAITING_FOR_RELEASE:            
+                if (btnA == 0) {                        
+                    stateA = DEBOUNCE_2;
+                    tmrA.reset();
+                    tmrA.start();
+                }
+            break;
 
-            // case DEBOUNCE_2:
-            //     if (timeA >= 50) {
-            //         stateA = WAITING_FOR_PRESS;
-            //         tmrA.stop();
-            //     }
-            // break;            
+            case DEBOUNCE_2:
+                if (tmrA.read_ms() >= 50) {
+                    stateA = WAITING_FOR_PRESS;
+                    tmrA.stop();
+                }
+            break;            
         }
 
         // ***************************
