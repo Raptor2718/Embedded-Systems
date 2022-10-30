@@ -8,7 +8,7 @@ using namespace uop_msb;
 using namespace chrono;
 
 DigitalIn BB(PG_0);   
-DigitalIn DB(PD_1);
+DigitalIn DB(PG_2, PullDown);
 
 LCD_16X2_DISPLAY lcd;
 LatchedLED disp(LatchedLED::SEVEN_SEG);
@@ -28,6 +28,8 @@ int up = 0;
 int down = 0;
 int up_time = 1000;
 int down_time = 1500;
+int scroll_time = 500;
+int scroll_count = 1;
 string birds = "                ";
 string cacti = "                ";
 char icon = 'T';
@@ -161,7 +163,7 @@ int main(void)
 
         //scrolling 
 
-        if (Scrolltmr.read_ms() >= 500)
+        if (Scrolltmr.read_ms() >= scroll_time)
         {
             //scroll string and print 
             for (int i = 0; i < 16; i++)
@@ -275,6 +277,13 @@ int main(void)
         } else {
             icon = '>';
         }
+
+        if (score >= scroll_count*50)
+        {
+            scroll_time -= 45;
+            scroll_count++;
+        }
+
 
     }
         
