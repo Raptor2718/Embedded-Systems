@@ -24,6 +24,7 @@ int up_time = 1000;
 int main(void)
 {
     lcd.cls();
+    Scrolltmr.start();
 
     while(true)
     {
@@ -64,7 +65,7 @@ int main(void)
                 {
                     BBstate = debounce2;
                     BBtmr.reset();
-                    BBtmr.stop();
+                    BBtmr.start();
                 }
 
             break;
@@ -82,6 +83,11 @@ int main(void)
 
         lcd.locate(0, 0);
         lcd.printf("up = %d ", up);
+
+        if (Scrolltmr.read_ms() >= 750)
+        {
+            
+        }
 
     }
         
