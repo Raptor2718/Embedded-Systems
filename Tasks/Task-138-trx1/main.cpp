@@ -2,10 +2,12 @@
 #include "uop_msb.h"
 #include <chrono>
 #include <ratio>
+#include <string>
+
 using namespace uop_msb;
 using namespace chrono;
 
-DigitalIn BB(PG_0);    
+DigitalIn BB(USER_BUTTON);    
 
 LCD_16X2_DISPLAY lcd;
 LatchedLED disp(LatchedLED::SEVEN_SEG);
@@ -16,15 +18,23 @@ switch_state BBstate = wait_press;
 
 TimerCompat BBtmr;
 TimerCompat Scrolltmr;
+TimerCompat Scoretmr;
 
 //variables for the game.
 int up = 0;
 int up_time = 1000;
+string cacti = "                ";
+int gap = 0;
+int cacti_num;
+int Scoretime = 1000;
+int score = 0;
 
 int main(void)
 {
     lcd.cls();
     Scrolltmr.start();
+    Scoretmr.start();
+
 
     while(true)
     {
@@ -41,12 +51,14 @@ int main(void)
                         BBstate = debounce1;
                         BBtmr.reset();
                         BBtmr.start();
+
                     }
                 } else if (BB == 1)
                 {
                     up = 1;
                     BBtmr.reset();
                     BBtmr.start();
+
                 }
 
             break;
@@ -81,12 +93,78 @@ int main(void)
 
         }
 
-        lcd.locate(0, 0);
-        lcd.printf("up = %d ", up);
-
-        if (Scrolltmr.read_ms() >= 750)
+        if (Scrolltmr.read_ms() >= 500)
         {
-            
+            //scroll string and print 
+            for (int i = 0; i < 16; i++)
+            {
+                cacti[i] = cacti[i+1];
+
+                switch (i)
+                {
+                    case 1:
+                        if ((up == 0) && (cacti[1] == 'c'))
+                        {
+                            lcd.cls();
+                            lcd.locate(0,3);
+                            lcd.printf("GAME OVER!");
+                            lcd.locate(1, 8);
+                            lcd.printf(":c");
+
+                            while(true);
+                        }
+                    break;
+
+                    case 15:
+                        if (gap >= 3)
+                        {
+
+                            gap = 0;
+                            cacti_num = rand() % 3;
+                            if (cacti_num == 0)
+                            {
+                                cacti[15] = 'c';
+                            } else {
+                                cacti[15] = ' ';
+                            } 
+
+                        } else {
+                            cacti[15] = ' ';
+                        }
+                }
+
+                lcd.locate(1,i);
+                lcd.printf("%c", cacti[i]);
+
+            }
+
+            Scrolltmr.reset();
+            Scrolltmr.start();
+            gap++;
+
+        }
+
+        if (Scoretmr.read_ms() >= Scoretime)
+        {
+            score++;
+            Scoretmr.reset();
+            lcd.locate(0, 13);
+            lcd.printf("%d", score);
+        }
+
+        if (up == 0)
+        {
+
+            lcd.locate(1, 1);
+            lcd.printf("T");
+            lcd.locate(0, 1);
+            lcd.printf(" ");
+        } else {
+    
+            lcd.locate(0, 1);
+            lcd.printf("T");
+            lcd.locate(1, 1);
+            lcd.printf(" ");
         }
 
     }
