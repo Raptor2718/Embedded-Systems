@@ -106,10 +106,10 @@ int main(void)
                         if ((up == 0) && (cacti[1] == 'c'))
                         {
                             lcd.cls();
-                            lcd.locate(0,3);
-                            lcd.printf("GAME OVER!");
-                            lcd.locate(1, 8);
-                            lcd.printf(":c");
+                            lcd.locate(0,2);
+                            lcd.printf("GAME OVER! :c");
+                            lcd.locate(1, 3);
+                            lcd.printf("score: %d", score);
 
                             while(true);
                         }
