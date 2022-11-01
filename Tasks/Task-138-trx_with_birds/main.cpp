@@ -48,7 +48,6 @@ int main(void)
     Scrolltmr.start();
     Scoretmr.start();
 
-
     while(true)
     {
 
