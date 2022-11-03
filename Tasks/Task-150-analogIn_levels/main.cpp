@@ -6,6 +6,9 @@ using namespace chrono;
 
 LatchedLED ledDisp(LatchedLED::STRIP);
 
+LCD_16X2_DISPLAY lcddisp;
+
+
 AnalogIn pot(AN_POT_PIN);
 AnalogIn ldr(AN_LDR_PIN);
 AnalogIn mic(MIC_AN_PIN);
@@ -14,35 +17,29 @@ DigitalOut green(PC_6);
 DigitalOut yellow(PC_3);
 DigitalOut red(PC_2);
 
-TimerCompat mictmr;
-TimerCompat lighttmr;
-
-int lightCount;
-int micCount;
-int potCount;
 
 int set_count(unsigned short input, unsigned short max_val)
 {
 
-    if (input > ((7/8) * max_val))
+    if (input > (7.0/8 * max_val))
     {
         return 7;
-    } else if (input > ((6/8) * max_val))
+    } else if (input > (6.0/8 * max_val))
     {
         return 6;
-    } else if (input > ((5/8) * max_val))
+    } else if (input > (5.0/8 * max_val))
     {
         return 5;
-    } else if (input > ((4/8) * max_val))
+    } else if (input > (4.0/8 * max_val))
     {
         return 4;
-    } else if (input > ((3/8) * max_val))
+    } else if (input > (3.0/8 * max_val))
     {
         return 3;
-    } else if (input > ((2/8) * max_val))
+    } else if (input > (2.0/8 * max_val))
     {
         return 2;
-    } else if (input > ((1/8) * max_val))
+    } else if (input > (1.0/8 * max_val))
     {
         return 1;
     } else {
@@ -53,9 +50,9 @@ int set_count(unsigned short input, unsigned short max_val)
 
 int main()
 {
-    mictmr.start();
-    //lighttmr.start();
+    
     ledDisp.enable(true);
+    lcddisp.cls();
 
     while (true) {
         //Read Analog to Digital Converter values (16 bit)
@@ -64,21 +61,13 @@ int main()
         unsigned short micVal   = abs(mic.read_u16() - 0x8000); 
 
         ledDisp.setGroup(LatchedLED::LEDGROUP::RED);
-        potCount = set_count(potVal, 0xFFFF);
-        ledDisp = 1 << potCount;
+        ledDisp = 1 << set_count(potVal, 0xFFFF);
 
-
+        ledDisp.setGroup(LatchedLED::LEDGROUP::GREEN);
+        ledDisp = 1 << set_count(lightVal, 0xFFFF);
+        
         ledDisp.setGroup(LatchedLED::LEDGROUP::BLUE);
-        if (mictmr.read_ms() <= 500){
-            ledDisp = 1 << micCount;
-        } else {
-            micCount = set_count(micVal, 0x5000);
-            printf("pot: %x, count: %d\n", potVal, potCount);
-            ledDisp = 1 << micCount;
-            mictmr.reset();
-            mictmr.start();
-
-        }
+        ledDisp = 1 << set_count(micVal, 0x2000);
 
     }
 }
