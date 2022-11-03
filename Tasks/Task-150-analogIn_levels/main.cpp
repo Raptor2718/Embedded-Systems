@@ -26,27 +26,27 @@ int set_count(unsigned short input, unsigned short max_val)
 
     if (input > 7/8 * max_val)
     {
-        return 8;
+        return 0b11111111;
     } else if (input > 6/8 * max_val)
     {
-        return 7;
+        return 0b1111111;
     } else if (input > 5/8 * max_val)
     {
-        return 6;
+        return 0b111111;
     } else if (input > 4/8 * max_val)
     {
-        return 5;
+        return 0b11111;
     } else if (input > 3/8 * max_val)
     {
-        return 4;
+        return 0b1111;
     } else if (input > 2/8 * max_val)
     {
-        return 3;
+        return 0b111;
     } else if (input > 1/8 * max_val)
     {
-        return 2;
+        return 0b11;
     } else {
-        return 1;
+        return 0b1;
     }
 
 }
@@ -63,28 +63,17 @@ int main()
         unsigned short lightVal = ldr.read_u16();
         unsigned short micVal   = abs(mic.read_u16() - 0x8000); 
 
-        ledDisp.setGroup(LatchedLED::LEDGROUP::GREEN);
-        if (lighttmr.read_ms() <= 500){
-            ledDisp = 2^lightCount - 1;
-        } else {
-            lightCount = set_count(lightVal, 0xFFFF);
-            ledDisp = 2^lightCount - 1;
-            lighttmr.reset();
-            lighttmr.start();
-
-        }
-
         ledDisp.setGroup(LatchedLED::LEDGROUP::RED);
         potCount = set_count(potVal, 0xFFFF);
-        ledDisp = 2^potCount - 1;
+        ledDisp = potCount;
 
 
         ledDisp.setGroup(LatchedLED::LEDGROUP::BLUE);
-        if (mictmr.read_ms() <= 500){
-            ledDisp = 2^micCount - 1;
+        if (mictmr.read_ms() <= 50){
+            ledDisp = micCount;
         } else {
             micCount = set_count(micVal, 0x8000);
-            ledDisp = 2^micCount - 1;
+            ledDisp = micCount;
             mictmr.reset();
             mictmr.start();
 
