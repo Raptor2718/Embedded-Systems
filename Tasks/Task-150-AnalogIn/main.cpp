@@ -14,6 +14,10 @@ AnalogIn pot(AN_POT_PIN);
 AnalogIn ldr(AN_LDR_PIN);
 AnalogIn mic(MIC_AN_PIN);
 
+DigitalOut green(PC_6);
+DigitalOut yellow(PC_3);
+DigitalOut red(PC_2);
+
 int main()
 {
 
@@ -46,16 +50,30 @@ int main()
         //Read Analog to Digital Converter values (16 bit)
         unsigned short potVal   = pot.read_u16();
         unsigned short lightVal = ldr.read_u16();
-        unsigned short micVal   = mic.read_u16(); 
+        int micVal   = mic.read_u16() - 0x8000; 
+
+        if (lightVal <= 0x800)
+        {
+            green = 1;
+        } else {
+            green = 0;
+        }
+
+        if (potVal >= 0x8000){
+            yellow = 1;
+        } else {
+            yellow = 0;
+        }
+
 
         //Write to terminal
         printf("--------------------------------\n");
         printf("Potentiometer: %X\n", potVal);
         printf("Light Dependant Resistor: %X\n", lightVal);
-        printf("Microphone: %X\n", micVal);   
+        printf("Microphone: %d\n", micVal);   
 
         //Wait 0.25 seconds
-        wait_us(500000);
+        wait_us(2000000);
 
     }
 }
