@@ -24,29 +24,29 @@ int potCount;
 int set_count(unsigned short input, unsigned short max_val)
 {
 
-    if (input > 7/8 * max_val)
+    if (input > ((7/8) * max_val))
     {
-        return 0b11111111;
-    } else if (input > 6/8 * max_val)
+        return 7;
+    } else if (input > ((6/8) * max_val))
     {
-        return 0b1111111;
-    } else if (input > 5/8 * max_val)
+        return 6;
+    } else if (input > ((5/8) * max_val))
     {
-        return 0b111111;
-    } else if (input > 4/8 * max_val)
+        return 5;
+    } else if (input > ((4/8) * max_val))
     {
-        return 0b11111;
-    } else if (input > 3/8 * max_val)
+        return 4;
+    } else if (input > ((3/8) * max_val))
     {
-        return 0b1111;
-    } else if (input > 2/8 * max_val)
+        return 3;
+    } else if (input > ((2/8) * max_val))
     {
-        return 0b111;
-    } else if (input > 1/8 * max_val)
+        return 2;
+    } else if (input > ((1/8) * max_val))
     {
-        return 0b11;
+        return 1;
     } else {
-        return 0b1;
+        return 0;
     }
 
 }
@@ -54,7 +54,7 @@ int set_count(unsigned short input, unsigned short max_val)
 int main()
 {
     mictmr.start();
-    lighttmr.start();
+    //lighttmr.start();
     ledDisp.enable(true);
 
     while (true) {
@@ -65,15 +65,16 @@ int main()
 
         ledDisp.setGroup(LatchedLED::LEDGROUP::RED);
         potCount = set_count(potVal, 0xFFFF);
-        ledDisp = potCount;
+        ledDisp = 1 << potCount;
 
 
         ledDisp.setGroup(LatchedLED::LEDGROUP::BLUE);
-        if (mictmr.read_ms() <= 50){
-            ledDisp = micCount;
+        if (mictmr.read_ms() <= 500){
+            ledDisp = 1 << micCount;
         } else {
-            micCount = set_count(micVal, 0x8000);
-            ledDisp = micCount;
+            micCount = set_count(micVal, 0x5000);
+            printf("pot: %x, count: %d\n", potVal, potCount);
+            ledDisp = 1 << micCount;
             mictmr.reset();
             mictmr.start();
 
