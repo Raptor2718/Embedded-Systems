@@ -18,9 +18,13 @@ DigitalOut green(PC_6);
 DigitalOut yellow(PC_3);
 DigitalOut red(PC_2);
 
+TimerCompat mictmr;
+TimerCompat tmr;
+
 int main()
 {
-
+    mictmr.start();
+    tmr.start();
     //Test LED Bar Display
     ledDisp.enable(true);
 
@@ -50,7 +54,7 @@ int main()
         //Read Analog to Digital Converter values (16 bit)
         unsigned short potVal   = pot.read_u16();
         unsigned short lightVal = ldr.read_u16();
-        int micVal   = mic.read_u16() - 0x8000; 
+        unsigned short micVal   = mic.read_u16(); 
 
         if (lightVal <= 0x800)
         {
@@ -65,15 +69,29 @@ int main()
             yellow = 0;
         }
 
+        if (micVal >= 0xA000)
+        {
+            mictmr.reset();
+            red = 1;
+            mictmr.start();
+        } else if (mictmr.read_ms() <= 500){
+            red = 1;
+        } else {
+            red = 0;
+        }
+
+        
 
         //Write to terminal
-        printf("--------------------------------\n");
-        printf("Potentiometer: %X\n", potVal);
-        printf("Light Dependant Resistor: %X\n", lightVal);
-        printf("Microphone: %d\n", micVal);   
+        if (tmr.read_ms() % 1000 == 0)
+        {
+            printf("--------------------------------\n");
+            printf("Potentiometer: %X\n", potVal);
+            printf("Light Dependant Resistor: %X\n", lightVal);
+            printf("Microphone: %X\n", micVal); 
+        } 
+          
 
-        //Wait 0.25 seconds
-        wait_us(2000000);
 
     }
 }
