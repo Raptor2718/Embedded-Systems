@@ -42,6 +42,26 @@ int score = 0;
 
 int main(void)
 {
+
+    //custom character setup
+    const int trex_number = 0;  // range 0-7 
+
+    const char trex[8] =
+    {0b00001111,
+     0b00001011,
+     0b00001111,
+     0b00010110,
+     0b00011111,
+     0b00001101,
+     0b00001000,
+     0b00001100};
+
+    lcd.set_CGRAM_Address(trex_number*8);    
+
+    for (int i=0;i<8;i++){
+        lcd.write(uop_msb::LCD_16X2_DISPLAY::DATA, trex[i]);
+    }
+
     //set up
     disp.enable(true);
     lcd.cls();
@@ -272,7 +292,8 @@ int main(void)
 
         if (down == 0)
         {
-            icon = 'T';
+            //if ((Scoretmr.read_ms() % 200) == 0)
+            icon = trex_number;
         } else {
             icon = '>';
         }
