@@ -25,9 +25,15 @@ state green_state;
 int main()
 {
     unsigned short samples[100];
+    unsigned short new_samples[100];
 
     for (unsigned int m=0; m<100; m++) {
         printf("%X ", samples[m]);
+    }
+
+    for (unsigned int m=0; m<100; m++) {
+        samples[m] = 0;
+        new_samples[m] = 0;
     }
 
     // Automatic headlamp 
@@ -73,5 +79,4 @@ int main()
 
     }  
 }
-
 

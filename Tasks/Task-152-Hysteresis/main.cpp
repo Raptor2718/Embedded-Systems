@@ -13,6 +13,10 @@ DigitalOut greenLED(TRAF_GRN1_PIN);
 AnalogIn pot(AN_POT_PIN);
 Buzzer buzz;
 
+typedef enum {on, off} state;
+
+state red_state = off;
+
 int main()
 {
 
@@ -20,16 +24,29 @@ int main()
         //Read Analog to Digital Converter values (16 bit)
         unsigned short potVal   = pot.read_u16();
         printf("Potentiometer: %X\n", potVal);
-        
-        if (potVal > 0x8000) {
-            redLED = 1;
-            buzz.playTone("C");
-        } else {
-            redLED = 0;
-            buzz.rest();
+
+        switch (red_state)
+        {
+            case on:
+                if (potVal <= 0x7000)
+                {
+                    redLED = 0;
+                    red_state = off;
+                    buzz.rest();
+                }
+            break;
+
+            case off:
+                if (potVal >= 0x9000)
+                {
+                    redLED = 1;
+                    red_state = on;
+                    buzz.playTone("C");
+                }
+            break;
         }
 
-        //Wait 0.25 seconds
+        //Wait 0.5 seconds
         wait_us(500000);
 
     }  
