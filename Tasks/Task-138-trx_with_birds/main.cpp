@@ -10,7 +10,8 @@ using namespace chrono;
 DigitalIn BB(PG_0);   
 DigitalIn DB(PG_2, PullDown);
 
-LCD_16X2_DISPLAY lcd;
+uop_msb::LCD_16X2_DISPLAY lcd;
+DigitalOut lcd_backlight(LCD_BKL_PIN);
 LatchedLED disp(LatchedLED::SEVEN_SEG);
 
 typedef enum {wait_press, debounce1, wait_release, debounce2} switch_state;
@@ -43,24 +44,127 @@ int score = 0;
 int main(void)
 {
 
+    lcd_backlight = 1;
+
     //custom character setup
-    const int trex_number = 0;  // range 0-7 
+    const int trex_graphics_num = 0;
+    const int cactus_graphics_num = 1;
+    const int bird_graphics_num = 2;
+    const int benttrex_graphics_num = 3;
+    const int trex1_graphics_num = 4;
+    const int benttrex1_graphics_num = 5;  
+
 
     const char trex[8] =
-    {0b00001111,
-     0b00001011,
-     0b00001111,
-     0b00010110,
-     0b00011111,
-     0b00001101,
-     0b00001000,
-     0b00001100};
+    {
+        0b00001111,
+        0b00001011,
+        0b00001111,
+        0b00010110,
+        0b00011111,
+        0b00001101,
+        0b00001000,
+        0b00001100
+    };
 
-    lcd.set_CGRAM_Address(trex_number*8);    
+    const char trex1[8] =
+    {
+        0b00001111,
+        0b00001011,
+        0b00001111,
+        0b00010110,
+        0b00011111,
+        0b00001101,
+        0b00000010,
+        0b00000011
+    };
+
+     const char cactus[8] = 
+     {
+        0b00000100,
+        0b00000101,
+        0b00010101,
+        0b00011111,
+        0b00011111,
+        0b00001110,
+        0b00001110,
+        0b00001110
+     };
+
+     const char bird[8] = 
+     {
+         0b00000101,
+         0b00000111,
+         0b00010111,
+         0b00011111,
+         0b00000010,
+         0b00000000,
+         0b00000000,
+         0b00000000
+     };
+
+     const char benttrex[8] = 
+     {
+         0b00000000,
+         0b00000000,
+         0b00000000,
+         0b00011111,
+         0b00011111,
+         0b00001010,
+         0b00001000,
+         0b00001100
+
+     };
+
+     const char benttrex1[8] = 
+     {
+         0b00000000,
+         0b00000000,
+         0b00000000,
+         0b00011111,
+         0b00011111,
+         0b00001010,
+         0b00000010,
+         0b00000011
+
+     };
+
+    lcd.set_CGRAM_Address(trex_graphics_num*8);    
 
     for (int i=0;i<8;i++){
         lcd.write(uop_msb::LCD_16X2_DISPLAY::DATA, trex[i]);
     }
+
+    lcd.set_CGRAM_Address(cactus_graphics_num*8);    
+
+    for (int i=0;i<8;i++){
+        lcd.write(uop_msb::LCD_16X2_DISPLAY::DATA, cactus[i]);
+    }
+
+    lcd.set_CGRAM_Address(bird_graphics_num*8);    
+
+    for (int i=0;i<8;i++){
+        lcd.write(uop_msb::LCD_16X2_DISPLAY::DATA, bird[i]);
+    }
+
+    lcd.set_CGRAM_Address(benttrex_graphics_num*8);    
+
+    for (int i=0;i<8;i++){
+        lcd.write(uop_msb::LCD_16X2_DISPLAY::DATA, benttrex[i]);
+    }
+
+    lcd.set_CGRAM_Address(trex1_graphics_num*8);    
+
+    for (int i=0;i<8;i++){
+        lcd.write(uop_msb::LCD_16X2_DISPLAY::DATA, trex1[i]);
+    }
+
+    lcd.set_CGRAM_Address(benttrex1_graphics_num*8);    
+
+    for (int i=0;i<8;i++){
+        lcd.write(uop_msb::LCD_16X2_DISPLAY::DATA, benttrex1[i]);
+    }
+
 
     //set up
     disp.enable(true);
@@ -193,7 +297,7 @@ int main(void)
                 switch (i)
                 {
                     case 1:
-                        if ((up == 0) && (cacti[1] == 'c'))
+                        if ((up == 0) && (cacti[1] == cactus_graphics_num))
                         {
                             lcd.cls();
                             lcd.locate(0,2);
@@ -204,7 +308,7 @@ int main(void)
                             while(true);
                         }
 
-                        if ((down == 0) && (birds[1] == 'b'))
+                        if ((down == 0) && (birds[1] == bird_graphics_num))
                         {
                             lcd.cls();
                             lcd.locate(0,2);
@@ -225,7 +329,7 @@ int main(void)
                             cacti_num = rand() % 3;
                             if (cacti_num == 0)
                             {
-                                cacti[15] = 'c';
+                                cacti[15] = cactus_graphics_num;
                             } else {
                                 cacti[15] = ' ';
                             } 
@@ -234,7 +338,7 @@ int main(void)
                             cacti[15] = ' ';
                         }
 
-                        if (score >= 50)
+                        if (score >= 30)
                         {
                             if (gap1 >= 5)
                             {
@@ -242,7 +346,7 @@ int main(void)
                                 birds_num = rand() % 3;
                                 if (birds_num == 0)
                                 {
-                                    birds[15] = 'b';
+                                    birds[15] = bird_graphics_num;
                                 } else {
                                     birds[15] = ' ';
                                 }
@@ -273,6 +377,7 @@ int main(void)
         {
             score++;
             Scoretmr.reset();
+            Scoretmr.start();
             disp = score;
         }
 
@@ -292,11 +397,22 @@ int main(void)
 
         if (down == 0)
         {
-            //if ((Scoretmr.read_ms() % 200) == 0)
-            icon = trex_number;
+            if ((Scoretmr.read_ms() % 200 > 0) && (Scoretmr.read_ms() % 200 < 100))
+            {
+                icon = trex1_graphics_num;
+            } else {
+                icon = trex_graphics_num;  
+            }
+
         } else {
-            icon = '>';
+            if ((Scoretmr.read_ms() % 200 > 0) && (Scoretmr.read_ms() % 200 < 100))
+            {
+                icon = benttrex1_graphics_num;
+            } else {
+                icon = benttrex_graphics_num;  
+            }
         }
+
 
         if (score >= scroll_count*50)
         {
