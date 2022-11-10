@@ -34,7 +34,7 @@ int main()
     cout << cppStr << endl;
 
     // Simple string compare
-    string strInput = "      ";
+    string strInput;
     while (true) {
         cout << "What colour?" << endl;
         cin >> strInput;
