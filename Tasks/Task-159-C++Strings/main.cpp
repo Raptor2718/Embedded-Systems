@@ -6,6 +6,7 @@ DigitalOut greenLED(LED1);
 DigitalOut blueLED(LED2);
 DigitalOut redLED(LED3);
 
+
 int main()
 {
     //Writing strings in C++
