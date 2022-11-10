@@ -25,25 +25,26 @@ state green_state;
 int main()
 {
     unsigned short samples[100];
-    unsigned short new_samples[100];
+    //unsigned short new_samples[100];
 
     for (unsigned int m=0; m<100; m++) {
         printf("%X ", samples[m]);
     }
 
     for (unsigned int m=0; m<100; m++) {
-        samples[m] = 0;
-        new_samples[m] = 0;
+        samples[m] = ldr.read_u16();;
+        //wait_us(10000);          // 10ms
     }
 
     // Automatic headlamp 
     while (true) {
 
-        for (unsigned int m=0; m<100; m++) {
-            unsigned short ldrVal   = ldr.read_u16();
-            samples[m] = ldrVal;
-            wait_us(10000);          // 10ms
+        for (int i = 0; i < 99; i++)
+        {
+            samples[i] = samples[i+1];
         }
+
+        samples[99] = ldr.read_u16();
 
         // TASK a. Calculate the average value in samples
         for (int i = 0; i < 100; i++)
@@ -53,7 +54,7 @@ int main()
         average = average/100;
 
         // TASK b. Display to 1dp
-        printf("average brightness = %5.1A\n", average); //why do I get weird long values when I try to show this in hex. %X
+        //printf("average brightness = %5.1A\n", average); //why do I get weird long values when I try to show this in hex. %X
 
         // TASK c. Switch green LED on when dark;
         switch (green_state)

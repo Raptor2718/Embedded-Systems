@@ -15,6 +15,7 @@ DigitalOut redLED(LED3);
 
 //Outputs
 LCD_16X2_DISPLAY disp;
+Buzzer buzz;
 
 int main()
 {
@@ -96,6 +97,15 @@ int main()
         else {
             printf("Please specify red, green or blue\n");
         }
+
+    char soundN[5];
+        printf("what sound?\n");
+        scanf("%s", soundN);
+
+        buzz.playTone(soundN);
+        wait_us(1000000);
+        buzz.rest();
+
     }
 
 }
