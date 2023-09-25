@@ -21,8 +21,13 @@ int main()
         greenLED = 1; 
         redLED =  1;
 
+<<<<<<< HEAD
         // Wait 0.2 second (0.2 million microseconds)
         wait_us(200000); 
+=======
+        // Wait 0.2 second (1 million microseconds)
+        wait_us(100000); 
+>>>>>>> 073e54812c27590ac6ecf7e9e017cc417de0d5d6
 
         // Turn LED OFF
         greenLED = 0;
@@ -30,6 +35,10 @@ int main()
         blueLED = 1;
 
         // Wait 0.2 second
+<<<<<<< HEAD
         wait_us(200000); 
+=======
+        wait_us(100000); 
+>>>>>>> 073e54812c27590ac6ecf7e9e017cc417de0d5d6
     }
 }
