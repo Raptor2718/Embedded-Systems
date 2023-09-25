@@ -25,7 +25,7 @@ int main()
     //scanf
     printf("\n\nTo set the delay (in ms), type in an int number and press return\n");
     int delay_ms=65;
-    int parsed = scanf("%d", daselay_ms);
+    int parsed = scanf("%d", delay_ms);
     
     printf("You entered %d correct integer values. The value was %dms\n", parsed, delay_ms);
 

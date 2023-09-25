@@ -42,5 +42,15 @@ int main()
 
         
         wait_us(WAIT_TIME_MS * 1000);
+
+
+
+        for (int i = 0; i < 8; i++)
+        {
+            amber = !amber;
+            wait_us(500000);
+        }
+
+
     }
 }
