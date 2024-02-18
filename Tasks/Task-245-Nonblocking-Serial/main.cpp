@@ -1,5 +1,6 @@
 #include "uop_msb.h"
 #include <chrono>
+#include <ctype.h>
 using namespace uop_msb;
 
 #define WAIT_TIME_MS 100 
@@ -41,9 +42,10 @@ int main()
     //Buzzer
     Buzzer buzz;
 
+    char tone[2] = {'C', '\0'};
     while (true)
     {
-        // Is there a character in the buffer to read?
+        
         if (serial_port.read(&p, 1) != -EAGAIN) { 
             // - Note: EAGAIN is a standard error message that means "no data available, try again later". 
             // - Only meaningful for non-blocking reads
@@ -57,10 +59,6 @@ int main()
                 //User pressed return
                 serial_port.write("\n\r",2); //Echo a newline
                 break;
-            case '1':
-                //Switch on buzzer
-                buzz.playTone("A");
-                break;
             case '2':
                 //Switch off buzzer
                 buzz.rest();
@@ -68,6 +66,9 @@ int main()
             default:
                 //Echo typed character to the terminal
                 serial_port.write(&p,1);
+                tone[0] = toupper(p);
+                buzz.playTone(tone);
+                break;
                 break;
             };
         }
