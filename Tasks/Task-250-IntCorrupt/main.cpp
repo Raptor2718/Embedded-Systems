@@ -67,14 +67,14 @@ void countDown()
 int main() {
     
     red_led = 1;
-    Timeout t1;
+    Ticker t1;
     
     // TRY EACH OF THESE LINES IN TURN.
     // ALL IT DOES IS CHANGE THE TIMING OF THE ISR, NOT THE FUNCTION
     
     if (button == PRESSED) {
         //VERSION 2: short delay allowing main to be preempted - you might want to tweak this value
-        t1.attach(&countDown, 25us);
+        t1.attach(&countDown, 100ms);
     } else {
         //VERSION 1: 2s - ENOUGH TIME FOR COUNTUP TO FINISH
         t1.attach(&countDown, 2s);                   
@@ -83,10 +83,13 @@ int main() {
     //Run count up on the main thread
     countUp();
     
-   
+    while (true) {
+        sleep();
+    }
+
     //Now spin for ever
-    while(1) { 
-        wait_us(500000);
-    };
+    // while(1) { 
+    //     wait_us(500000);
+    // };
 }
 
