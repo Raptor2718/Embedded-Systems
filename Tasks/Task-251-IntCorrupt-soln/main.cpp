@@ -20,6 +20,31 @@ void countUp()
     //RED MEANS THE COUNT UP FUNCTION IS IN ITS CRITICAL SECTION
     green_led = 1;
     for (unsigned int n=0; n<N; n++) {
+        //CriticalSectionLock::enable();
+        counter++; 
+        counter++;
+        counter++;
+        counter++;
+        counter++;
+        counter++;
+        counter++;
+        counter++;
+        counter++;
+        counter++; 
+        //CriticalSectionLock::disable();
+    }  
+    green_led = 0; 
+    
+    //Last to finish turnes out the green light
+    if (counter == 0) {
+        red_led = 0;   
+    }
+}
+void countUp_protected()
+{
+    //RED MEANS THE COUNT UP FUNCTION IS IN ITS CRITICAL SECTION
+    green_led = 1;
+    for (unsigned int n=0; n<N; n++) {
         CriticalSectionLock::enable();
         counter++; 
         counter++;
@@ -40,14 +65,13 @@ void countUp()
         red_led = 0;   
     }
 }
-
 //Decrement the shared variable
 void countDown()
 {
     //YELLOW MEANS THE COUNT DOWN FUNCTION IS IN ITS CRITICAL SECTION
     yellow_led = 1;
     for (unsigned int n=0; n<N; n++) {
-        CriticalSectionLock::enable();
+        //CriticalSectionLock::enable();
         counter--;
         counter--;
         counter--;
@@ -58,7 +82,7 @@ void countDown()
         counter--;
         counter--;
         counter--;  
-        CriticalSectionLock::disable();
+        //CriticalSectionLock::disable();
     }
     yellow_led = 0;
       
@@ -67,8 +91,11 @@ void countDown()
         red_led = 0;   
     }     
 }
+
+DIPSwitches dpsw;
+
 int main() {
-    
+
     red_led = 1;
     Timeout t1;
     
@@ -84,7 +111,12 @@ int main() {
     }
     
     //Run count up on the main thread
-    countUp();
+    if (dpsw[0]){
+        countUp_protected();
+    } else {
+        countUp();
+    }
+    
     
    
     //Now spin for ever
