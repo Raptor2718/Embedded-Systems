@@ -69,7 +69,6 @@ int main()
                 tone[0] = toupper(p);
                 buzz.playTone(tone);
                 break;
-                break;
             };
         }
         

@@ -1,12 +1,13 @@
 #include "uop_msb.h"
 #include <chrono>
 #include <ratio>
+#include <ctype.h>
 using namespace uop_msb;
 using namespace chrono;
 
 //Buzzer
 Buzzer buzz;
-
+char tone[2] = {'A', '\0'};
 // Create a DigitalOutput object to toggle an LED whenever data is received.
 static DigitalOut led1(LED1);
 static DigitalOut led2(LED2);
@@ -49,13 +50,13 @@ void on_rx_interrupt()
             buzz.rest();
             break;
         case '+':
-            T += 100000;
+            T += 100000;    //100ms added to flash rate
             ledTicker.detach();
             ledTicker.attach(&onTick, microseconds(T));
             break;
         case '-':
             if (T >= 200000) {
-                T -= 100000;
+                T -= 100000;    //100ms substracted from flash rate
                 ledTicker.detach();
                 ledTicker.attach(&onTick, microseconds(T));
             }
@@ -63,6 +64,9 @@ void on_rx_interrupt()
         default:
             //Echo typed character to the terminal
             serial_port.write(&p,1);
+            serial_port.write(&p,1);
+            tone[0] = toupper(p);
+            buzz.playTone(tone);
             break;
         };
     }
