@@ -24,11 +24,11 @@ void flashy() {
 
 void A_flashy() {
     redLED = !redLED;
-    serial_port.write(&_B,1);
+    serial_port.write(&_A,1);
 }
 void B_flashy() {
     yellowLED = !yellowLED;
-    serial_port.write(&_A,1);
+    serial_port.write(&_B,1);
 }
 
 //objects that run the passed interrupt at given adge of given pin
