@@ -23,8 +23,11 @@ public:
     //Convenience constructor
     DoubleNumber() : DoubleNumber(0.0) { }
 
+    DoubleNumber(DoubleNumber &duplicate) {
+        _real = duplicate.getValue();
+    }
     //Magnitude
-    double magnitude() {
+    double magnitude() { 
         return fabs(_real);
     }
 
@@ -53,11 +56,11 @@ int main()
 {
     //Constructor Function overloading 
     DoubleNumber n0(1.0);
-    DoubleNumber n1;
+    DoubleNumber n1(n0);
     DoubleNumber n2;
 
     //setValue function overloading  
-    n1.setValue(10);
+    //n1.setValue(10);
     n2.setValue("-3.0");
 
     cout << n0.getValue() + n1.getValue() + n2.getValue() << endl;
