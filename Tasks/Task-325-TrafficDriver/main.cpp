@@ -1,13 +1,32 @@
 #include "mbed.h"
 #include "TrafficLight.h"
+#include "stdio.h"
+
+#define BTN1_PIN PG_0
 
 TrafficLight lights;
 DigitalIn sw(USER_BUTTON);
+InterruptIn btnA(BTN1_PIN);
 
 TrafficLight::LIGHT_STATE s;
+UnbufferedSerial ser(USBTX,USBRX);
+
+
+void stoplight();
 
 int main()
 {
+    printf("What's the flash rate?\r\n");
+    double num;
+    char buf [32];
+    while(!ser.read(buf, 1));
+    printf("get data %c\r\n",buf[0]);
+
+
+    scanf("%lf", &num);
+    lights.setFlashSpeed(num);
+
+    btnA.rise(&stoplight);
     while (true) {
 
         //Wait for switch press
@@ -28,3 +47,7 @@ int main()
     }
 }
 
+void stoplight() 
+{
+    lights.stop();
+}

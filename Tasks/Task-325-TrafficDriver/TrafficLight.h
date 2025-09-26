@@ -2,6 +2,8 @@
 #define __TRAFFICLIGHT__
 
 #include "mbed.h"
+#include <chrono>
+
 using namespace chrono;
 
 #define TRAF_GRN1_PIN PC_6
@@ -19,6 +21,7 @@ class TrafficLight
     DigitalOut greenLED;
     Ticker t;
     LIGHT_STATE State;
+    chrono::milliseconds tickerRate = 200ms;
 
     void yellowFlashISR();
     void flashYellow(bool flash);
@@ -33,6 +36,8 @@ class TrafficLight
 
     //Advance the traffic lights to the next state
     LIGHT_STATE nextState();
+    void stop();
+    void setFlashSpeed(double speed);
 
 };
 
