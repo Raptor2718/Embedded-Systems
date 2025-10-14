@@ -1,4 +1,5 @@
 #include "TrafficLight.h"
+#include <chrono>
 
 //Contructor
 TrafficLight::TrafficLight(PinName redPin, PinName yellowPin, PinName greenPin) 
@@ -30,7 +31,7 @@ void TrafficLight::flashYellow(bool flash) {
     t.detach(); //Turn off ticker
     if (flash) {
         //Turn on ticker ..... Hmmm, interrupts!
-        t.attach(callback(this, &TrafficLight::yellowFlashISR), 200ms);
+        t.attach(callback(this, &TrafficLight::yellowFlashISR), tickerRate);
     }
 }
 
@@ -91,3 +92,14 @@ TrafficLight::LIGHT_STATE TrafficLight::nextState()
     //Return the current state (for information)
     return State; 
 } 
+
+void TrafficLight::stop() 
+{
+    State = STOP;
+    updateOutput();
+}
+
+void TrafficLight::setFlashSpeed(double speed) 
+{
+    auto tickerRate = speed * 1ms;
+}
