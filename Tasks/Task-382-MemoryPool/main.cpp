@@ -12,6 +12,9 @@ void thread1();
 void thread2();
 void switchISR();
 
+InterruptIn ButtonA(BTN1_PIN, PullDown);
+InterruptIn ButtonB(BTN2_PIN, PullDown);
+
 
 //Threads
 Thread t1;
@@ -46,6 +49,10 @@ void switchISR() {
     //Grab switch state
     uint32_t switch1State = buttonA;
     uint32_t switch2State = buttonB;
+
+    // if (switch1State) {
+    //     return;
+    // }
     
     //Allocate a block from the memory pool (non blocking)
     message_t* message = mpool.try_alloc();
@@ -91,6 +98,8 @@ void thread1()
             printf("Float Value: %.2f\t",    msg.fValue);
             printf("SW1: %u\t",              msg.sw1State);
             printf("SW2: %u\n\r",            msg.sw2State);
+            
+            Watchdog::get_instance().kick();
         } else {
             //TODO: Handle timeout
             printf("Timeout!\n");
@@ -105,13 +114,16 @@ int main() {
     redLED    = 0;
     yellowLED = 0;
     greenLED  = 0;
+    ButtonA.rise(switchISR);
+    ButtonB.rise(switchISR);
+    Watchdog::get_instance().start(30000);
            
     //Start message
     printf("Welcome\n");           
    
     //Hook up interrupts   
-    Ticker timer; 
-    timer.attach(&switchISR, 100ms);
+    //Ticker timer; 
+    //timer.attach(&switchISR, 500ms);
                
     //Threads
     t1.start(thread1);

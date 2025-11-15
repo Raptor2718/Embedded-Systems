@@ -16,7 +16,7 @@ int main() {
     t1.start(task1);
     t2.start(task2);
     
-    //t1.set_priority(osPriorityRealtime);  //Try this
+    t2.set_priority(osPriorityRealtime);  //Try this
 
     //Wait for t1 and t2 to end (which they never do)
     t1.join();

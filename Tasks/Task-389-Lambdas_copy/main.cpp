@@ -20,29 +20,17 @@ int main() {
     DigitalOut led2(LED2);
 
     //Write closures for capturing the LEDs (by reference) and performing call-back operations
-    auto lFuncApress = [&](DigitalOut& led, char btn) {
-        mainQueue.call([&led](){led = 1;});                                 
-        msgQueue.call(printf, "Button %c pressed\n", btn);
+    auto lFuncApress = [&]() {
+        led1 = 1;                                   
+        msgQueue.call(printf, "Button A pressed\n");
     };
-    auto lFuncArel = [&](DigitalOut& led, char btn) {
-        mainQueue.call([&led](){led = 0;});                                 
-        msgQueue.call(printf, "Button %c released\n", btn);
+    auto lFuncArel = [&]() {
+        led1 = 0;
     };    
-
 
     // Note that no DigitalOut type needs to be passed via the constructor.
     // It is all "captured" inside the two closures
-    PressAndRelease btnA(
-        BTN1_PIN,
-        [&]() { lFuncApress(led1, 'A'); },
-        [&]() { lFuncArel(led1, 'A'); }
-    );
-
-    PressAndRelease btnB(
-        BTN2_PIN,
-        [&]() { lFuncApress(led2, 'B'); },
-        [&]() { lFuncArel(led2, 'B'); }
-    );
+    PressAndRelease btnA(BTN1_PIN, lFuncApress, lFuncArel);
 
     //Dispatch jobs on the main thread
     mainQueue.dispatch_forever();

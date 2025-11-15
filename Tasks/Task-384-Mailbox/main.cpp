@@ -131,7 +131,7 @@ int main() {
    
     //Hook up interrupts   
     Ticker timer; 
-    timer.attach(&switchISR, 100ms);
+    timer.attach(&switchISR, 500ms);
                
     //Threads
     t1.start(thread1);

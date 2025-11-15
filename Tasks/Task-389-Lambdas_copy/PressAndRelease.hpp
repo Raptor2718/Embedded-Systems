@@ -12,13 +12,15 @@ private:
             ThisThread::flags_wait_all(BTN_PRESS);
             button.rise(NULL);
             onPress();      //Call back
+
             ThisThread::sleep_for(50ms);
             ThisThread::flags_clear(BTN_PRESS);
-            button.fall( [&]() { t1.flags_set(BTN_RELEASE); } ); // enable ISR for release now that debounce was waited through
+            button.fall( [&]() { t1.flags_set(BTN_RELEASE); } );
 
             ThisThread::flags_wait_all(BTN_RELEASE);
             button.fall(NULL);
             onRelease();    //Call back
+
             ThisThread::sleep_for(50ms);
             ThisThread::flags_clear(BTN_RELEASE);
             button.rise( [&]() { t1.flags_set(BTN_PRESS); } );

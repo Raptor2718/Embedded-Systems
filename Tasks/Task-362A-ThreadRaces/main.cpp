@@ -1,5 +1,6 @@
 #include "mbed.h"
 #include "uop_msb.h"
+#include <cstdio>
 using namespace uop_msb;
 
 void countUp();
@@ -25,12 +26,16 @@ Thread t2;
 //Shared mutable state
 volatile long long counter = 0; //Volatile means it must be stored in memory
 
+Mutex counterlock;
+
 //Increment the shared variable 
 void countUp()
 {
     //RED MEANS THE COUNT UP FUNCTION IS IN ITS CRITICAL SECTION
+    counterlock.lock();
     green_led = 1;
     for (unsigned int n=0; n<N; n++) {
+        
         counter++; 
         counter++;
         counter++;
@@ -40,8 +45,10 @@ void countUp()
         counter++;
         counter++;
         counter++;
-        counter++;           
+        counter++; 
+                
     }  
+    counterlock.unlock();  
     green_led = 0; 
     
 }
@@ -51,7 +58,8 @@ void countDown()
 {
     //YELLOW MEANS THE COUNT DOWN FUNCTION IS IN ITS CRITICAL SECTION
     yellow_led = 1;
-    for (unsigned int n=0; n<N; n++) {
+    counterlock.lock();
+    for (unsigned int n=0; n<N; n++) {        
         counter--;
         counter--;
         counter--;
@@ -61,8 +69,9 @@ void countDown()
         counter--;
         counter--;
         counter--;
-        counter--;           
+        counter--;          
     }
+    counterlock.lock();
     yellow_led = 0;
     
 }
@@ -72,7 +81,7 @@ int main() {
     disp.cls();
     uint16_t skew = pot.read_u16() >> 12;
     red_led = 1;
-    
+
     //Start competing threads
     
     if (button == 0) {
@@ -95,6 +104,7 @@ int main() {
     disp.locate(1, 0);
     disp.printf("Counter=%Ld\n", counter);
 
+    printf("counter: %lli \n", counter);
     if (counter == 0) {
         red_led = 0;   
     }

@@ -28,10 +28,10 @@ void ISR() {
     if (buttonA == 1) return;
     
     //Random sample
-    uint32_t sample = rand();
+    uint32_t sample = 1;
     
     //Write to queue as 32-bit integer (same size as pointer)
-    bool sent = queue.try_put((uint32_t*)sample); //Non-blocking
+    bool sent = queue.try_put(&sample); //Non-blocking
     
     //Check if succesful
     if (!sent) {
@@ -44,11 +44,12 @@ void thread1()
 {    
     while (true) {
         //Read queue - block (with timeout)
-        uint32_t* rx;   // Fancy type for a 32-bit integer :)
-        bool success = queue.try_get_for(10s, &rx); //Blocks for 10s if there is no data
+        uint32_t *valuePtr;
+        bool success = queue.try_get_for(10s, &valuePtr); //Blocks for 10s if there is no data
         
         if (success) {
-            printf("value: %u\n", (uint32_t)rx);
+            uint32_t value = *valuePtr;    // dereference the pointer safely
+            printf("value: %u\n", value);
         } else {
             printf("Receive timeout\n");
             yellowLED = 1;

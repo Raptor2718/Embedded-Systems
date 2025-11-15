@@ -32,6 +32,7 @@ private:
 
             ThisThread::flags_wait_all(BTN_RELEASE);                    
             button.fall(NULL);
+            if (onRelease) onRelease();
             ThisThread::sleep_for(50ms);
             ThisThread::flags_clear(BTN_RELEASE);
             button.rise(callback(this, &PressAndRelease::button_rise));     //Enable ISR for switch press
@@ -39,9 +40,10 @@ private:
     }
     //Hook into the button press
     void(*onPress)(void);                                                   //Member variable (function pointer)
+    void(*onRelease)(void);
 
 public:
-    PressAndRelease(PinName buttonPin, funcPointer_t press=NULL) : button(buttonPin), onPress(press) {
+    PressAndRelease(PinName buttonPin, funcPointer_t press=NULL, funcPointer_t release=NULL) : button(buttonPin), onPress(press), onRelease(release) {
         t1.start(callback(this, &PressAndRelease::handler));
         button.rise(callback(this, &PressAndRelease::button_rise));  
     }
