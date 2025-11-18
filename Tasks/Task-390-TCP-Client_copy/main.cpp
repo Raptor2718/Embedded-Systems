@@ -9,7 +9,7 @@
 EthernetInterface net;
 char rbuffer[65];
 
-#define IPV4_HOST_ADDRESS "10.254.65.176"
+#define IPV4_HOST_ADDRESS "10.42.0.1"
 #define TCP_SOCKET_PORT 8888
 
 DigitalIn BlueButton(USER_BUTTON);
