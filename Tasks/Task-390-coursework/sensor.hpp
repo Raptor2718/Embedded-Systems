@@ -13,6 +13,7 @@ class Sensor {
         AnalogIn ldr;
         milliseconds sample_period = 500ms;
         Mail<mail_t, 16>&mailbox;
+        int event_id;
     
     
     void sample() {
@@ -54,6 +55,13 @@ class Sensor {
             self_test();
             st.start(callback(&sq, &EventQueue::dispatch_forever));
 
-            sq.call_every(sp, callback(this, &Sensor::sample));
+            event_id = sq.call_every(sp, callback(this, &Sensor::sample));
+        }
+
+        ~Sensor() {
+            sq.cancel(event_id);     // stop periodic callback
+            sq.break_dispatch(); 
+            st.join();
+            printf("[sensor] goodbye!");
         }
 };

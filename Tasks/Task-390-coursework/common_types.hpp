@@ -1,3 +1,4 @@
+
 #ifndef COMMON_TYPES_H
 #define COMMON_TYPES_H
 #include <string>
@@ -6,13 +7,30 @@
 
 enum fields: uint8_t {l = 0, p = 1, t = 2};
 
-const char* field_to_string(fields f) {
-    switch(f) {
-        case l: return "light"; break;
-        case t: return "temperature"; break;
-        case p: return "preassure"; break;
-    };
-}
+class mail_t {
+    public:
+        unsigned short ldr;
+        float temp;
+        float pressure;
+
+        mail_t() = default;
+        
+        mail_t(unsigned short l, float t, float p) 
+        : ldr(l), temp(t), pressure(p) {};
+
+        mail_t(const mail_t &other)
+        : ldr(other.ldr), temp(other.temp), pressure(other.pressure) {}
+
+        float get_float(fields f) {
+            switch (f) {
+            case l:     return (float)ldr;
+            case p:     return pressure;
+            case t:     return temp;
+            }
+            // fallback required to silence warnings
+            return ldr;
+        }
+};
 
 class limits {
     public:
@@ -73,32 +91,6 @@ typedef struct fieldlimits {
         return ldr;
     }
 } fieldlimits;
-
-
-class mail_t {
-    public:
-        unsigned short ldr;
-        float temp;
-        float pressure;
-
-        mail_t() = default;
-        
-        mail_t(unsigned short l, float t, float p) 
-        : ldr(l), temp(t), pressure(p) {};
-
-        mail_t(const mail_t &other)
-        : ldr(other.ldr), temp(other.temp), pressure(other.pressure) {}
-
-        float get_float(fields f) {
-            switch (f) {
-            case l:     return (float)ldr;
-            case p:     return pressure;
-            case t:     return temp;
-            }
-            // fallback required to silence warnings
-            return ldr;
-        }
-};
 
 struct dict_obj {
     std::string key;

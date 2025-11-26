@@ -12,19 +12,17 @@
 #include <iostream>
 #include "EthernetInterface.h"
 #include "TCPSocket.h"
-//SPL06_001_SPI sensor(); // mosi, miso, sclk, cs
+
 
 DigitalOut blueLED(LED2);
 DigitalOut redLED(LED3);
 
-Mail<mail_t, 16>mailbox; 
-Mail<mail_t, 16>dispbox;
-CircularBuffer<mail_t, 200>mailbuf;
-Mutex buf_mutex;
+Mail<mail_t, 16>mailbox;                // communicarion between the Sensor class thread and buft thread
+Mail<mail_t, 16>dispbox;                // communication between Display class thread and buft thread
+CircularBuffer<mail_t, 200>mailbuf;     // written by buft thread running update_buffer() and read by data_log() called by the main function
+Mutex buf_mutex;                        // protects the above buffer which is used by both the main thread and buft
 
-Thread buft(osPriorityNormal);
-
-SDCard sd_card(PB_5, PB_4, PB_3, PF_3, PF_4);
+Thread buft(osPriorityNormal);          // this thread gabs sensor data sent through mailbox, stores it in the circular buffer and also posts it to be used by the Display class via dispbox
 
 void update_buffer();
 void data_log();
@@ -33,7 +31,7 @@ int main()
 {
     
     redLED = 0;
-    Sensor sensor(mailbox, 500ms, PB_5, PB_4, PB_3, PB_2, AN_LDR_PIN);
+    Sensor sensor(mailbox, 1000ms, PB_5, PB_4, PB_3, PB_2, AN_LDR_PIN); 
     Display disp(dispbox);
 
     buft.start(callback(update_buffer));
@@ -48,20 +46,21 @@ int main()
 void update_buffer() {
     while(true) {
         mail_t* payload;
-        redLED = !redLED;
-        payload = mailbox.try_get_for(10s); // blocking
+        payload = mailbox.try_get_for(10s); // blocking Note: mbed claims .get() is depricated
 
+        // once sensor mail is recieved...
         if (payload) {
             mail_t mail(payload->ldr, payload->temp, payload->pressure);
             mailbox.free(payload);
 
-            // update buffer
+            // update circular buffer
             buf_mutex.lock();
             if (!mailbuf.full()) {
                 mailbuf.push(mail);
             }
             buf_mutex.unlock();
 
+            // post mail to the thread in Display class to be displayed
             mail_t *dispmail = dispbox.try_alloc();
             if (dispmail == NULL) {
                 return;
@@ -75,6 +74,7 @@ void update_buffer() {
                 dispbox.free(dispmail);
                 return;
             }
+            redLED = !redLED;
         }
     }
 }
@@ -84,6 +84,7 @@ void data_log() {
     mail_t item;
     static bool init_write = true;
     
+    // circular buffer data is copied to the local buffer
     buf_mutex.lock();
     while (!mailbuf.empty()) {
         mailbuf.pop(item);
@@ -91,12 +92,14 @@ void data_log() {
     }
     buf_mutex.unlock();
 
+    // write headers during initial write
     const char *filename = "sensor.log";
     if (init_write) {
         init_write = false;  
         const char *initlog = "light level,temperature (degC),preassure (hPa)\n";
         sd.write_file((char*)filename, (char*)initlog, false, true);
     }
+
     while (!dump.empty()) {
         item = dump.back();
         dump.pop_back();
