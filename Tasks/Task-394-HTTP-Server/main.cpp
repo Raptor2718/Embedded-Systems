@@ -17,7 +17,11 @@ using namespace std;
 #define HTTP_STATUS_LINE "HTTP/1.0 200 OK"
 #define HTTP_HEADER_FIELDS "Content-Type: text/html; charset=utf-8"
 #define HTTP_MESSAGE_BODY ""                                     \
-"<html>" "\r\n"                                                  \
+"<html>" "\r\n"                                        \
+"  <head>" "\r\n"\
+"<title>hello, from Nuceo!</title>" "\r\n"\
+"<meta http-equiv=\"refresh\" content=\"1\">" "\r\n"\
+"</head>" \
 "  <body style=\"display:flex;text-align:center\">" "\r\n"       \
 "    <div style=\"margin:auto\">" "\r\n"                         \
 "      <h1>POT Value</h1>" "\r\n"                              \

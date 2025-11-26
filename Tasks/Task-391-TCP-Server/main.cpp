@@ -74,8 +74,22 @@ int main()
         string rx;
         char rxBuffer[65];
         nsapi_size_or_error_t N = clt_sock->recv(rxBuffer, sizeof(rxBuffer)-1);   //Read (upto) 64 bytes
+
+        if (N <= 0) {
+            // handle no data / closed connection
+            clt_sock->close();
+            continue;
+        }
         rxBuffer[N] = 0;
         printf("%s\n", rxBuffer);
+
+        for (int i = 0; rxBuffer[i]; i++) {
+            if (rxBuffer[i] == '\n' || rxBuffer[i] == '\r') {
+                rxBuffer[i] = '\0';
+                break;
+            }
+        }
+
         rx = string(rxBuffer);             //String response as C++ string
 
         if (rx == "END") {                      //Are we done?

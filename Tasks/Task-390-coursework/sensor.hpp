@@ -32,6 +32,11 @@ class Sensor {
         }
     }
 
+    void self_test() {
+        printf("[sensor] Light = %d\n[sensor] Preassure = %04.2f hPa\n[sensor] Temperature = %2.2f degC\n", ldr.read_u16(), dev.getPressure(), dev.getTemperature());
+        printf("[sensor] self test complete\n");
+    }
+
     public:
         Sensor(Mail<mail_t, 16> &mb,
            milliseconds sp,
@@ -45,6 +50,8 @@ class Sensor {
           mailbox(mb)
         {
             dev.initialize();
+
+            self_test();
             st.start(callback(&sq, &EventQueue::dispatch_forever));
 
             sq.call_every(sp, callback(this, &Sensor::sample));

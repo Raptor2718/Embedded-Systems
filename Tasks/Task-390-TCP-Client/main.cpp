@@ -9,8 +9,8 @@
 EthernetInterface net;
 char rbuffer[65];
 
-#define IPV4_HOST_ADDRESS "10.254.65.176"
-#define TCP_SOCKET_PORT 8888
+#define IPV4_HOST_ADDRESS "10.42.0.1"
+#define TCP_SOCKET_PORT 8080
 
 DigitalIn BlueButton(USER_BUTTON);
 DigitalOut led(LED1);
@@ -24,6 +24,7 @@ int main()
     bool keepGoing = true;
  
     do {
+        static int num = 0;
         // Show the network address
         SocketAddress a;
         net.get_ip_address(&a);
@@ -45,9 +46,11 @@ int main()
 
         //Connect to remote web server
         socket.connect(a);
-
+        socket.set_timeout(1000);
         // Send a simple array of bytes (I've used a string so you can read it)
-        char sbuffer[] = "Hello, this is the MBED Board talking!";
+        char sbuffer[70]; 
+        sprintf(sbuffer, "Hello, this is the MBED Board talking! (I've talked %d times now)\n\r", num);
+        num++;
         char qbuffer[] = "END";
 
         int scount;
@@ -72,19 +75,19 @@ int main()
             rbuffer[rcount] = 0;    //End of string character
             printf("%s", rbuffer);
         }
-        printf("\n");
+        printf("");
 
         //Check for error
-        if (rcount < 0) {
-            printf("Error! socket->recv() returned: %d\n", rcount);
-            keepGoing = false;
-        }
+        // if (rcount < 0) {
+        //     printf("Error! socket->recv() returned: %d\n", rcount);
+        //     keepGoing = false;
+        // }
 
         // Close the socket to return its memory and bring down the network interface
         socket.close();
 
         //Loop delay of 5s
-        wait_us(5000000);
+        wait_us(2000000);
 
     } while (keepGoing);
 

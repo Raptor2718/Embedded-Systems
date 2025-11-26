@@ -1,21 +1,21 @@
-#include "Callback.h"
 #include "CircularBuffer.h"
-#include "EventQueue.h"
-#include "PinNames.h"
-#include "ThisThread.h"
 #include "cmsis_os2.h"
 #include "mbed.h"
-#include "SPL06-001.h"
 #include "common_types.hpp"
-#include "uop_msb.h"
+#include "display.hpp"
 #include "sensor.hpp"
+#include "uop_msb.h"
 #include <cstdio>
 #include <string>
 #include <vector>
 #include <format>
 #include <iostream>
+#include "EthernetInterface.h"
+#include "TCPSocket.h"
 //SPL06_001_SPI sensor(); // mosi, miso, sclk, cs
 
+DigitalOut blueLED(LED2);
+DigitalOut redLED(LED3);
 
 Mail<mail_t, 16>mailbox; 
 Mail<mail_t, 16>dispbox;
@@ -31,10 +31,13 @@ void data_log();
 
 int main()
 {
-    Sensor sensor(mailbox, 500ms, PB_5, PB_4, PB_3, PB_2, AN_LDR_PIN);
     
-    buft.start(callback(update_buffer));
+    redLED = 0;
+    Sensor sensor(mailbox, 500ms, PB_5, PB_4, PB_3, PB_2, AN_LDR_PIN);
+    Display disp(dispbox);
 
+    buft.start(callback(update_buffer));
+    
     while(true) {
         ThisThread::sleep_for(60000ms);
         data_log();
@@ -45,7 +48,8 @@ int main()
 void update_buffer() {
     while(true) {
         mail_t* payload;
-        payload = mailbox.try_get_for(10s);
+        redLED = !redLED;
+        payload = mailbox.try_get_for(10s); // blocking
 
         if (payload) {
             mail_t mail(payload->ldr, payload->temp, payload->pressure);
@@ -71,12 +75,6 @@ void update_buffer() {
                 dispbox.free(dispmail);
                 return;
             }
-            // serial print 
-            // printf("Light level = %d\nTemperature = %2.2f degC\nPreassure   = %04.2f hPa\n", mail.ldr, mail.temp, mail.pressure);
-
-            // Alarm 
-
-            //light bar
         }
     }
 }

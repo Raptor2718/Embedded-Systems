@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Nucleo Dashboard</title>
+  <style>
+    body {
+      font-family: "Fira Code", monospace;
+      background: #0c0c0c;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #0f0;
+    }
+
+    .container {
+      display: flex;
+      gap: 20px;
+    }
+
+    .panel {
+      background: #111;
+      padding: 16px 20px;
+      border-radius: 4px;
+      box-shadow: none;
+      min-width: 260px;
+    }
+
+    h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 4px 0;
+      text-align: left;
+      border-bottom: 1px solid #0f0;
+    }
+
+    form label {
+      font-size: 14px;
+      margin-right: 6px;
+    }
+
+    form input[type="radio"] {
+      transform: scale(1.1);
+      margin-bottom: 10px;
+    }
+
+    input[type="submit"] {
+      width: 100%;
+      margin-top: 18px;
+      padding: 10px 0;
+      border: none;
+      background: #0f0;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    input[type="submit"]:hover {
+      background: #0d0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="panel">
+      <h3>Environment Sensor Data</h3>
+      <table>
+        <tr><th>Parameter</th><th>Value</th></tr>
+        <tr><td>LDR</td><td>{{l}}</td></tr>
+        <tr><td>Temperature</td><td>{{t}} °C</td></tr>
+        <tr><td>Pressure</td><td>{{p}} hPa</td></tr>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h3>Select LED Bar Parameter</h3>
+      <form action="/" method="GET" autocomplete="off">
+        <form action="/" method="GET" autocomplete="off">
+        <label>LDR</label>
+        <input type="radio" name="param" value="l"><br>
+
+        <label>Temperature</label>
+        <input type="radio" name="param" value="t"><br>
+
+        <label>Pressure</label>
+        <input type="radio" name="param" value="p"><br>
+
+        <input type="submit" value="Submit" />
+        </form>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

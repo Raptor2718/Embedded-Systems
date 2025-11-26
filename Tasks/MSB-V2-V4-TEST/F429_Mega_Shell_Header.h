@@ -61,6 +61,7 @@ DigitalOut led2(LED2);
 DigitalOut led3(LED3);
 
 // RGB Bar LED LATCHED by used of RGBcol, number of LEDS selected by RGBled, output enable active LOW
+//dataBus(LED_D0_PIN, LED_D1_PIN, LED_D2_PIN, LED_D3_PIN, LED_D4_PIN, LED_D5_PIN, LED_D6_PIN, LED_D7_PIN)   
 BusOut RGBled(PE_2, PE_3, PE_4, PE_5, PE_6, PE_7, PE_8, PE_9);
 BusOut RGBcol(PE_12, PE_13, PE_14);
 DigitalOut RGBoe(PE_0,1);
